@@ -10,5 +10,7 @@ def schools_by_topic(mongo_collection, topic):
     Returns:
             (List[DOCS]): Documents those have topic filtered.
     """
-
-    return [doc for doc in mongo_collection.find({'topics': {'$elemMatch': {'$eq': topic, }, }, })]
+    students = []
+    for student in mongo_collection.find({"topics": topics}):
+        students.append(student)
+    return students

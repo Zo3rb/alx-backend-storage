@@ -9,5 +9,8 @@ def list_all(mongo_collection):
     Returns:
             Possibally List of Docs or empty list.
     """
+    docs = []
+    for doc in mongo_collection.find():
+        docs.append(doc)
 
-    return [doc for doc in mongo_collection.find()]
+    return docs

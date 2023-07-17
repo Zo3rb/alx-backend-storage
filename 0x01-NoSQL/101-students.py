@@ -9,22 +9,10 @@ def top_students(mongo_collection):
     Returns:
             (List[DOCS]): List of students sorted by averge score.
     """
-    return mongo_collection.aggregate(
-        [
-            {
-                '$project': {
-                    '_id': 1,
-                    'name': 1,
-                    'averageScore': {
-                        '$avg': {
-                            '$avg': '$topics.score',
-                        },
-                    },
-                    'topics': 1,
-                },
-            },
-            {
-                '$sort': {'averageScore': -1},
-            },
-        ]
-    )
+    pipeline = [
+        {"$unwind": "$topics"},
+        {"$group": {"_id": "$_id", "name": {"$first": "$name"},
+                    "averageScore": {"$avg": "$topics.score"}}},
+        {"$sort": {"averageScore": -1}}
+    ]
+    return list(mongo_collection.aggregate(pipeline))
